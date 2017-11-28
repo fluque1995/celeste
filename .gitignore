@@ -1,0 +1,8 @@
+# Don't upload __pycache__
+__pycache__/
+
+# Don't upload emacs backup files
+*\~
+
+# Don't upload PDF files
+*.pdf
