@@ -72,8 +72,45 @@ class Planet:
         return (self.distance_to_sun(time)**2 *
                 self.real_annomaly_deriv(time, real_annomaly))
 
+    def print_information(self, time):
+        print("Posición de {} en {}: {}".format(self.name,
+                                                time,
+                                                self.position(time)
+        ))
+        print("Distancia al sol de {} en {}: {}".format(self.name,
+                                                        time,
+                                                        self.distance_to_sun(time)
+        ))
+        print("Velocidad de {} en {}: {}".format(self.name,
+                                                 time,
+                                                 self.speed(time)
+        ))
+        print("Módulo de la velocidad de {} en {}: {}".format(self.name,
+                                                              time,
+                                                              self.speed_module(time)
+        ))
+        print("Anomalía real de {} en {}: {}".format(self.name,
+                                                     time,
+                                                     self.real_annomaly(time)
+        ))
+        print("Energía de {} en {}: {}".format(self.name,
+                                               time,
+                                               self.energy_from_time(time)
+        ))
+        print("Energía (constante) de {}: {}".format(self.name,
+                                                     self.energy()
+        ))
 
-mercury = Planet("Mercurio", 0.206, 0.387, 87.97)
-venus = Planet("Venus", 0.007, 0.723, 224.7)
-earth = Planet("La tierra", 0.017, 1, 365.26)
-mars = Planet("Marte", 0.093, 1.524, 686.98)
+
+planets_list = [
+    Planet("Mercurio", 0.206, 0.387, 87.97),
+    Planet("Venus", 0.007, 0.723, 224.7),
+    Planet("La tierra", 0.017, 1, 365.26),
+    Planet("Marte", 0.093, 1.524, 686.98),
+    Planet("Júpiter", 0.048, 5.203, 4332.6),
+    Planet("Saturno", 0.056, 9.546, 10759),
+    Planet("Urano", 0.047, 19.2, 30687),
+    Planet("Neptuno", 0.009, 30.09, 60784),
+]
+
+planets_list[0].print_information(4)
