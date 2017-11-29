@@ -1,20 +1,29 @@
 import numpy as np
 
 
-def eccentric_annomaly(period, epsilon, time, tol=0.0001):
+def get_x1(period, epsilon, time):
+    ji = 2*np.pi*time/period
+    u_1 = -1
+    if time < period/2:
+        while u_1 < 0 or u_1 > np.pi:
+            u_0 = np.random.uniform(0, np.pi, 1)
+            num = (-u_0*np.cos(u_0) + np.sin(u_0))*epsilon + ji
+            u_1 = num/(1-epsilon*np.cos(u_0))
+    else:
+        while u_1 < np.pi or u_1 > 2*np.pi:
+            u_0 = np.random.uniform(np.pi, 2*np.pi, 1)
+            num = (-u_0*np.cos(u_0) + np.sin(u_0))*epsilon + ji
+            u_1 = num/(1-epsilon*np.cos(u_0))
+
+    return u_1
+
+
+def eccentric_annomaly(period, epsilon, time, tol=0.001):
     ji = 2*np.pi*time/period
 
-    curr_u = np.random.uniform(0, np.pi, 1)
-    num = (-curr_u*np.cos(curr_u) + np.sin(curr_u))*epsilon + ji
-    next_u = num/(1-epsilon*np.cos(curr_u))
-
-    while next_u < 0 or next_u > np.pi:
-        curr_u = np.random.uniform(0, np.pi, 1)
-        num = (-curr_u*np.cos(curr_u) + np.sin(curr_u))*epsilon + ji
-        next_u = num/(1-epsilon*np.cos(curr_u))
-
-    dist = abs(curr_u - next_u)
-
+    curr_u = next_u = get_x1(period, epsilon, time)
+    dist = np.infty
+    
     while dist > tol:
         curr_u = next_u
         numer = (-curr_u*np.cos(curr_u) + np.sin(curr_u))*epsilon + ji

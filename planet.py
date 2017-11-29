@@ -1,5 +1,7 @@
 import numpy as np
 import utils
+import plotly.offline as py
+import plotly.graph_objs as go
 
 
 class Planet:
@@ -75,31 +77,49 @@ class Planet:
     def print_information(self, time):
         print("Posición de {} en {}: {}".format(self.name,
                                                 time,
-                                                self.position(time)
-        ))
+                                                self.position(time)))
         print("Distancia al sol de {} en {}: {}".format(self.name,
                                                         time,
-                                                        self.distance_to_sun(time)
-        ))
+                                                        self.
+                                                        distance_to_sun(time)))
         print("Velocidad de {} en {}: {}".format(self.name,
                                                  time,
-                                                 self.speed(time)
-        ))
-        print("Módulo de la velocidad de {} en {}: {}".format(self.name,
-                                                              time,
-                                                              self.speed_module(time)
-        ))
-        print("Anomalía real de {} en {}: {}".format(self.name,
-                                                     time,
-                                                     self.real_annomaly(time)
-        ))
-        print("Energía de {} en {}: {}".format(self.name,
-                                               time,
-                                               self.energy_from_time(time)
-        ))
-        print("Energía (constante) de {}: {}".format(self.name,
-                                                     self.energy()
-        ))
+                                                 self.speed(time)))
+        print("Módulo de la velocidad de {} en {}: {}"
+              .format(self.name,
+                      time,
+                      self.
+                      speed_module(time)))
+        print("Anomalía real de {} en {}: {}"
+              .format(self.name,
+                      time,
+                      self.real_annomaly(time)))
+        print("Energía de {} en {}: {}"
+              .format(self.name,
+                      time,
+                      self.energy_from_time(time)))
+        print("Energía (constante) de {}: {}"
+              .format(self.name,
+                      self.energy()))
+
+    def display_orbit(self, time):
+        ts = list(np.arange(0, self.period, self.period/500))
+        xs = [self.position(t) for t in ts]
+        xs.append(xs[0])
+        xs = np.asarray(xs)
+        scatter = go.Scattergl(x=xs[:, 0], y=xs[:, 1])
+        position = self.position(time)
+        planet = go.Scattergl(x=position[0], y=position[0],
+                              mode='markers',
+                              marker=dict(
+                                  size=10,
+                                  color='rgba(152, 0, 0, .8)',
+                                  line=dict(
+                                      width=2,
+                                      color='rgb(0, 0, 0)'
+                                  )
+                              ))
+        py.iplot([planet, scatter])
 
 
 planets_list = [
@@ -113,4 +133,7 @@ planets_list = [
     Planet("Neptuno", 0.009, 30.09, 60784),
 ]
 
-planets_list[0].print_information(4)
+planets_list[2].print_information(25)
+
+planets_list[0].display_orbit(25)
+
