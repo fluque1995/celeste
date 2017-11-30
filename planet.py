@@ -107,19 +107,48 @@ class Planet:
         xs = [self.position(t) for t in ts]
         xs.append(xs[0])
         xs = np.asarray(xs)
-        scatter = go.Scattergl(x=xs[:, 0], y=xs[:, 1])
+
+        orbit = go.Scattergl(x=xs[:, 0], y=xs[:, 1],
+                             name='órbita')
+
         position = self.position(time)
-        planet = go.Scattergl(x=position[0], y=position[0],
+        planet = go.Scattergl(x=[position[0]], y=[position[1]],
                               mode='markers',
                               marker=dict(
-                                  size=10,
+                                  size=15,
                                   color='rgba(152, 0, 0, .8)',
                                   line=dict(
                                       width=2,
                                       color='rgb(0, 0, 0)'
                                   )
-                              ))
-        py.iplot([planet, scatter])
+                              ),
+                              name='{}: día {}'
+                              .format(self.name, time))
+
+        sun = go.Scattergl(x=[0], y=[0],
+                           mode='markers',
+                           marker=dict(
+                               size=20,
+                               color='rgba(230, 230, 0, .9)',
+                               line=dict(width=1, color='rgb(100,100,0)')
+                           ),
+                           name='Sol')
+        rng = int(self.a) + 1
+        layout = go.Layout(
+            width=700, height=600,
+            xaxis=dict(
+                anchor='y',
+                range=[-rng, rng]
+            ),
+            yaxis=dict(
+                anchor='x',
+                autorange=False,
+                range=[-rng, rng],
+            )
+        )
+        data = [orbit, planet, sun]
+        fig = go.Figure(data=data, layout=layout)
+        py.plot(fig, filename='planet-orbit.html')
 
 
 planets_list = [
@@ -133,7 +162,7 @@ planets_list = [
     Planet("Neptuno", 0.009, 30.09, 60784),
 ]
 
-planets_list[2].print_information(25)
+planets_list[7].print_information(25)
 
-planets_list[0].display_orbit(25)
+planets_list[7].display_orbit(25)
 
