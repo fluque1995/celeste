@@ -2,13 +2,13 @@ import plotly.offline as py
 import plotly.graph_objs as go
 import numpy as np
 
-from planet import planets_list
-
 
 class Displayer:
 
-    def print_information(self, planet, time):
-        
+    def print_information(self, planet, time_str):
+
+        time = int(time_str)
+
         print("Posición de {} en {}: {}".format(planet.name,
                                                 time,
                                                 planet.position(time)))
@@ -83,11 +83,4 @@ class Displayer:
         )
         data = [orbit, planet_pos, sun]
         fig = go.Figure(data=data, layout=layout)
-        py.plot(fig, filename='planet-orbit.html')
-
-
-displayer = Displayer()
-
-displayer.print_information(planets_list[0], 25)
-
-displayer.display_orbit(planets_list[0], 25)
+        py.iplot(fig, filename='jupyter/planet-orbit.html')

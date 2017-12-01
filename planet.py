@@ -12,6 +12,9 @@ class Planet:
         self.mu = 4*np.pi**2*self.a**3/self.period**2
         self.c = np.sqrt(self.mu*self.a*(1-epsilon**2))
 
+    def __str__(self):
+        return self.name
+
     def position(self, time):
         eccentric_annomaly = utils.eccentric_annomaly(
             self.period,
@@ -73,13 +76,13 @@ class Planet:
                 self.real_annomaly_deriv(time, real_annomaly))
 
 
-planets_list = [
-    Planet("Mercurio", 0.206, 0.387, 87.97),
-    Planet("Venus", 0.007, 0.723, 224.7),
-    Planet("La tierra", 0.017, 1, 365.26),
-    Planet("Marte", 0.093, 1.524, 686.98),
-    Planet("Júpiter", 0.048, 5.203, 4332.6),
-    Planet("Saturno", 0.056, 9.546, 10759),
-    Planet("Urano", 0.047, 19.2, 30687),
-    Planet("Neptuno", 0.009, 30.09, 60784),
-]
+planets_dict = {
+    "Mercurio": Planet("Mercurio", 0.206, 0.387, 87.97),
+    "Venus": Planet("Venus", 0.007, 0.723, 224.7),
+    "La Tierra": Planet("La tierra", 0.017, 1, 365.26),
+    "Marte": Planet("Marte", 0.093, 1.524, 686.98),
+    "Júpiter": Planet("Júpiter", 0.048, 5.203, 4332.6),
+    "Saturno": Planet("Saturno", 0.056, 9.546, 10759),
+    "Urano": Planet("Urano", 0.047, 19.2, 30687),
+    "Neptuno": Planet("Neptuno", 0.009, 30.09, 60784),
+}
