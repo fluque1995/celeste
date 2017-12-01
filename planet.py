@@ -8,6 +8,7 @@ class Planet:
         self.epsilon = epsilon
         self.a = a
         self.period = period
+        self.orbit = None
         
         self.mu = 4*np.pi**2*self.a**3/self.period**2
         self.c = np.sqrt(self.mu*self.a*(1-epsilon**2))
@@ -74,6 +75,14 @@ class Planet:
         real_annomaly = self.real_annomaly(time)
         return (self.distance_to_sun(time)**2 *
                 self.real_annomaly_deriv(time, real_annomaly))
+
+    def get_orbit(self, npoints):
+        if self.orbit is None:
+            ts = list(np.arange(0, self.period, self.period/npoints))
+            self.orbit = [self.position(t) for t in ts]
+            self.orbit.append(self.orbit[0])
+            self.orbit = np.asarray(self.orbit)
+        return self.orbit
 
 
 planets_dict = {

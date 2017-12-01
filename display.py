@@ -1,6 +1,6 @@
 import plotly.offline as py
 import plotly.graph_objs as go
-import numpy as np
+from planet import planets_dict
 
 
 class Displayer:
@@ -9,38 +9,30 @@ class Displayer:
 
         time = int(time_str)
 
-        print("Posición de {} en {}: {}".format(planet.name,
-                                                time,
-                                                planet.position(time)))
-        print("Distancia al sol de {} en {}: {}".format(planet.name,
-                                                        time,
-                                                        planet.
-                                                        distance_to_sun(time)))
-        print("Velocidad de {} en {}: {}".format(planet.name,
-                                                 time,
-                                                 planet.speed(time)))
-        print("Módulo de la velocidad de {} en {}: {}"
-              .format(planet.name,
-                      time,
-                      planet.
-                      speed_module(time)))
-        print("Anomalía real de {} en {}: {}"
-              .format(planet.name,
-                      time,
-                      planet.real_annomaly(time)))
-        print("Energía de {} en {}: {}"
-              .format(planet.name,
-                      time,
-                      planet.energy_from_time(time)))
+        print("Posición de {} en el día {}: {}"
+              .format(planet.name, time, planet.position(time)))
+
+        print("Distancia al sol de {} en el día {}: {}"
+              .format(planet.name, time, planet.distance_to_sun(time)))
+
+        print("Velocidad de {} en el día {}: {}"
+              .format(planet.name, time, planet.speed(time)))
+
+        print("Módulo de la velocidad de {} en el día {}: {}"
+              .format(planet.name, time, planet.speed_module(time)))
+
+        print("Anomalía real de {} en el día {}: {}"
+              .format(planet.name, time, planet.real_annomaly(time)))
+
+        print("Energía de {} en el día {}: {}"
+              .format(planet.name, time, planet.energy_from_time(time)))
+
         print("Energía (constante) de {}: {}"
-              .format(planet.name,
-                      planet.energy()))
+              .format(planet.name, planet.energy()))
 
     def display_orbit(self, planet, time):
-        ts = list(np.arange(0, planet.period, planet.period/500))
-        xs = [planet.position(t) for t in ts]
-        xs.append(xs[0])
-        xs = np.asarray(xs)
+        xs = planet.get_orbit(200)
+
         orbit = go.Scattergl(x=xs[:, 0], y=xs[:, 1],
                              name='órbita')
 
@@ -83,4 +75,4 @@ class Displayer:
         )
         data = [orbit, planet_pos, sun]
         fig = go.Figure(data=data, layout=layout)
-        py.iplot(fig, filename='jupyter/planet-orbit.html')
+        py.iplot(fig, filename='planet-orbit.html')
