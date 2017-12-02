@@ -10,3 +10,10 @@ __pycache__/
 
 # Don't upload generated HTMLs
 *.html
+
+# Don't upload Latex compilation files
+*.aux
+*.toc
+*.log
+*.out
+report/auto/
