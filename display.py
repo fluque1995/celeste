@@ -60,7 +60,7 @@ class Displayer:
         rng = int(planet.a) + 1
 
         layout = go.Layout(
-            width=700, height=500,
+            width=600, height=400,
             xaxis=dict(
                 anchor='y',
                 range=[-rng, rng]
@@ -74,3 +74,7 @@ class Displayer:
         data = [orbit, planet_pos, sun]
         fig = go.Figure(data=data, layout=layout)
         py.iplot(fig)
+
+    def display_information_and_orbit(self, planet, time):
+        self.print_information(planet, time)
+        self.display_orbit(planet, time)
