@@ -1,0 +1,302 @@
+\documentclass[12pt]{article} 
+\usepackage[utf8x]{inputenc}
+\usepackage{graphicx} 
+\usepackage{multirow} 
+\usepackage{hhline}
+\usepackage{booktabs} 
+\usepackage{vmargin} %cambia el margen
+\usepackage{amsmath,amsthm} 
+\usepackage{amsfonts} 
+\usepackage{float}
+\usepackage{listings}
+
+\usepackage[hidelinks]{hyperref}
+
+\title{
+  Mecánica Celeste\\
+  \large Trabajo de programación sobre la 
+  órbita de los planetas en el sistema solar.  }
+
+
+\author{ 
+  Francisco Luque Sánchez
+}
+
+\begin{document}
+\maketitle
+\begin{center}  
+\includegraphics[scale=0.35]{escudo.png}
+\end{center}
+
+\newpage
+
+\tableofcontents % para generar el índice de contenidos
+
+\pagebreak
+
+\section{Introducción}
+
+En esta práctica desarrollaremos un programa en Python que nos
+permitirá conocer información sobre el estado de un planeta, visto
+como una partícula en órbita en el Sistema Solar. Podremos calcular la
+posición del mismo dependiendo del día del periodo orbital en el que
+nos encontremos, así como su distancia al sol, la velocidad que tiene,
+el módulo de la misma, su energía, su anomalía real y excéntrica, y su
+momento angular.\\
+
+Además, se nos permitirá representar en unos ejes cartesianos, en los
+que se toma como punto de referencia el Sol, la órbita de los
+planetas, así como su posición dentro de la órbita en un día
+especificado por el usuario.\\
+
+A lo largo de este informe vamos a explicar la fundamentación
+matemática que justifica las funciones programadas en Python. El
+código implementado se adjunta para su revisión en caso necesario.\\
+
+Vamos ahora a ver la fundamentación matemática de las funciones
+implementadas.
+
+\section{Cálculos realizados}
+
+Vamos a ver los cálculos realizados, que luego se han implementado
+en funciones en Python para el programa.
+
+\subsection{Posición de planeta}
+
+Lo primero que se ha calculado es la posición del planeta. Para
+calcular dicha posición, se ha utilizado el siguiente sistema:
+
+\begin{equation}
+  \left\{
+    \begin{array}{l}
+      x(t) = a(\cos{u(t)} - \varepsilon, \sqrt{1 - \varepsilon^2}\sin{u(t)}) \\
+      u(t) - \varepsilon \sin{u(t)} = \frac{2\pi}{p}(t - t_0)      
+    \end{array}
+  \right.
+\end{equation}
+
+Lo primero que tenemos que calcular es la anomalía excéntrica. Hemos
+supuesto $t_0 = 0$, ya que no tenemos información sobre un posible
+punto de tiempo de referencia. Para poder calcular su valor, dado que
+no podemos obtener una expresión analítica de la misma, vamos a
+utilizar el método de Newton-Raphson para dar una aproximación
+numérica.  Como ya vimos en las clases de teoría, definiendo
+$\xi = \frac{2\pi}{p}$, y utilizando la expresión
+
+\[
+u_{n+1} = \frac{(-u_n\cos{u_n} + \sin{u_n})\varepsilon - \xi}{1 -
+  \varepsilon \cos{u_n}}
+\]
+
+Tenemos una expresión iterativa basada en el método de Newton-Raphson
+que nos permite aproximar el valor de la excentricidad en un tiempo
+$t$.\\
+
+Una vez calculado el valor de la anomalía excéntrica, simplemente 
+sustituimos el valor en la ecuación de la posición, y obtenemos el
+valor deseado.
+
+\subsection{Distancia al Sol}
+
+Para calcular la distancia al Sol, simplemente tendremos que calcular
+el módulo de la posición calculada anteriormente.
+
+\subsection{Velocidad del planeta}
+
+Para calcular la velocidad, utilizaremos la derivada de la posición,
+expresada de la misma manera que en apartado anterior. Tenemos que
+dicha derivada es:
+
+\[
+\dot{x}(t) = a \dot{u}(t)(-\sin{u(t)}, \sqrt{1 -
+  \varepsilon^2}\cos{u(t)})
+\]
+
+Y calculamos en clase que el valor de $\dot{u}(t)$ es:
+
+\[
+\dot{u}(t) = \frac{|c|}{a^2 \sqrt{1 - \varepsilon^2}(1 - \varepsilon
+  \cos{u(t)})}
+\]
+
+Usando además la relación que nos liga el módulo del momento angular
+con la longitud del semieje mayor de la elipse que define la órbita
+del planeta, que es:
+
+\[
+a = \frac{|c|^2}{\mu(1 - \varepsilon^2)} \Rightarrow |c| =
+\sqrt{a\mu(1 - \varepsilon^2)}
+\]
+
+Obtenemos que:
+
+\[
+\dot{u}(t) = \frac{\sqrt{a\mu}\sqrt{(1 - \varepsilon^2)}}{a^2 \sqrt{1
+    - \varepsilon^2}(1 - \varepsilon \cos{u(t)})} =
+\frac{\sqrt{a\mu}}{a^2 (1 - \varepsilon \cos{u(t)})}
+\]
+
+Ahora, con la tercera ley de Kepler podemos expresar $\mu$ en función
+de otras constantes dependientes del planeta:
+
+\[
+p = \frac{2\pi}{\sqrt{\mu}}a^{\frac{3}{2}} \Rightarrow \sqrt{\mu} =
+\frac{2\pi}{p}a^{3/2}
+\]
+
+Que sustituyendo en la ecuación, nos da el siguiente resultado:
+
+\[
+\dot{u}(t) = \frac{\sqrt{a\mu}}{a^2 (1 - \varepsilon \cos{u(t)})} =
+\frac{2 \pi a^2}{a^2 p (1 - \varepsilon \cos{u(t)})} = \frac{2 \pi} {p
+  (1 - \varepsilon \cos{u(t)})}
+\]
+
+Ahora sustituimos este valor en la expresión de $\dot{x}(t)$ para
+obtener una expresión de la velocidad dependiente del tiempo:
+
+\[
+\dot{x}(t) = \frac{2 \pi a}{p(1 - \varepsilon
+  \cos{u(t)})}(-\sin{u(t)}, \sqrt{1 - \varepsilon^2}\cos{u(t)})
+\]
+
+De nuevo, el cálculo de la anomalía excéntrica se hace con el método
+de Newton-Raphson anteriormente explicado.
+
+\subsection{Módulo de la velocidad}
+
+Para obtener el módulo de la velocidad, calculamos la norma del
+vector anterior.
+
+\subsection{Anomalía real}
+
+Además del sistema de ecuaciones anterior, la posición de un planeta
+se puede expresar también con el siguiente sistema de ecuaciones:
+
+\begin{equation}
+  \left\{
+    \begin{array}{l}
+      x(t) = \frac{a(1 - \varepsilon^2)}{1 + \varepsilon(\cos{\theta(t)} - \omega)}(\cos{\theta(t)}, \sin{\theta(t)})\\
+      \dot{\theta}(t) = \frac{|c|}{a^2(1 - \varepsilon^2)^2}(1 + \varepsilon \cos{(\theta(t) - \omega)})
+    \end{array}
+  \right.
+\end{equation}
+
+La función $\theta(t)$ se conoce como la anomalía real del planeta, y
+marca el ángulo que forma, en radianes, el planeta con el semieje
+mayor positivo de la elipse. Queremos averiguar dicho valor para un
+tiempo $t$, pero no podemos obtener una expresión analítica de dicha
+función, por lo que para resolverlo utilizaremos el método de
+Runge-Kutta-4. Este método numérico sirve para estimar valores de una
+función en un determinado punto $t$, conocida una expresión de la
+derivada de la función a estimar (en nuestro caso una expresión de
+$\dot{theta}(t)$, que tenemos escrita en el sistema anterior), y una
+pareja $(t_0, \theta(t_0))$. Interpretando el significado de la
+fúnción $\theta$, y suponiendo que $\omega = 0$, que indica el giro
+del semieje mayor de la elipse respecto del eje $OX^{+}$, tenemos que
+$\theta(t_0) = 0$, que será el punto de referencia que tomaremos
+para utilizar el método seleccionado.\\
+
+No haremos una explicación más profunda del funcionamiento de dicho
+método, ya que se sale de los contenidos de la asignatura. Se puede
+ver una explicación del método en
+\url{https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods}
+
+\subsection{Energía del planeta}
+
+Pasamos ahora al cálculo de la energía del planeta. Por un lado,
+tenemos que la energía de un cuerpo sometido a un campo de fuerzas
+centrales en un determinado instante de tiempo $t$ es la siguiente:
+
+\[
+E_{t}(t) = E_{c}(t) + E_{p}(t) = \frac{m|\dot{x}(t)|^2}{2} -
+\frac{m\mu}{|x(t)|}
+\]
+
+Donde nos aparecen involucrados el módulo de la velocidad del planeta,
+anteriormente calculado, la distancia al Sol del mismo, cálculo que
+también hemos realizado, y la constante $\mu$, para la que vimos antes
+la expresión:
+
+\[
+\sqrt{\mu} = \frac{2\pi}{p}a^{3/2} \Rightarrow \mu = \frac{4
+  \pi^2}{p^2}a^3
+\]
+
+Por lo que podemos calcular de forma sencilla el valor de la energía
+en un determinado instante de tiempo $t$. Además, se dedujo, con la
+ley de conservación de la energía, que la energía en todo momento es
+constante. Podemos calcular entonces una expresión de la energía en
+función de las constantes del planeta, que nos permita calcularla sin
+tener que recurrir a la evaluación de la distancia al Sol y el módulo
+de la velocidad en un instante de tiempo determinado. No mostramos
+todos los cálculos intermedios dado que es un proceso tedioso, pero la
+expresión de la energía la podemos calcular de la siguiente
+manera. Tenemos por un lado que la distancia del planeta al Sol es,
+tomando como posición el primer sistema que mostramos en la práctica:
+
+\[
+|x(t)| = a(1 - \varepsilon \cos{u(t)})
+\]
+
+Por otro, el cuadrado del módulo de la velocidad se puede expresar
+como:
+
+\[
+|\dot{x}(t)|^2 = a^2|\dot{u}(t)|^2(1-\varepsilon^2cos^2{u(t)})
+\]
+
+Sustituyendo dichos valores en la expresión que pusimos al principio,
+obtenemos:
+
+\[
+E_{t}(t) = \frac{ma^2|\dot{u}(t)|^2(1-\varepsilon^2cos^2{u(t)})}{2} -
+\frac{m\mu}{a(1 - \varepsilon \cos{u(t)})}
+\]
+
+El valor del módulo de $|\dot{u}(t)|^2$ sabemos que es:
+
+\[
+|\dot{u}(t)|^2 = \frac{|c|^2}{a^4(1-\varepsilon^2)(1 - \varepsilon
+  cos(u(t)))^2}
+\]
+
+Y conocemos la siguiente expresión para $\mu$:
+
+\[
+\mu = \frac{|c|^2}{a(1 - \varepsilon^2)}
+\]
+
+Al sustituir ambos valores en la expresión anterior y simplificar, se
+obtiene que:
+
+\[
+E_t(t) = \frac{m|c|^2(1+\varepsilon
+  cos(u(t)))}{2a^2(1-\varepsilon^2)(1-\varepsilon cos(u(t)))} -
+\frac{m|c|^2}{a^2(1 - \varepsilon^2)(1-\varepsilon cos(u(t))}
+\]
+
+Convirtiendo las dos fracciones a común denominador, llegamos a la
+siguiente expresión:
+
+\[
+E_t(t) = -\frac{m|c|^2}{2a^2(1-\varepsilon^2)}
+\]
+
+Que claramente es independiente del tiempo. El único valor que
+tendríamos que calcular es el módulo del momento angular, que veremos
+en la siguiente sección que es también constante. De esta forma,
+tenemos una expresión constante para la energía, que en la
+implementación compararemos con la energía en un instante de
+tiempo, para comprobar la corrección de los cálculos.\\
+
+Dado que no tenemos datos sobre la masa de los planetas, la
+implementación de la energía que daremos será por unidad de masa. Para 
+obtener el dato de la energía real de un planeta, habría que multiplicar
+el valor que obtengamos por la masa del mismo.
+
+\subsection{Momento angular del planeta}
+
+\end{document}
+
+
