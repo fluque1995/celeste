@@ -60,7 +60,7 @@ class Displayer:
         rng = int(planet.a) + 1
 
         layout = go.Layout(
-            width=500, height=300,
+            width=700, height=500,
             xaxis=dict(
                 anchor='y',
                 range=[-rng, rng]
