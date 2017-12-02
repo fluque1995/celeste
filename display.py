@@ -1,13 +1,10 @@
 import plotly.offline as py
 import plotly.graph_objs as go
-from planet import planets_dict
 
 
 class Displayer:
 
-    def print_information(self, planet, time_str):
-
-        time = int(time_str)
+    def print_information(self, planet, time):
 
         print("Posición de {} en el día {}: {}"
               .format(planet.name, time, planet.position(time)))
@@ -31,6 +28,7 @@ class Displayer:
               .format(planet.name, planet.energy()))
 
     def display_orbit(self, planet, time):
+
         xs = planet.get_orbit(200)
 
         orbit = go.Scattergl(x=xs[:, 0], y=xs[:, 1],
