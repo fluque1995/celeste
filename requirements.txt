@@ -2,3 +2,4 @@ ipywidgets==5.2.2
 numba==0.30.1
 numpy==1.11.3
 plotly==2.0.7
+scipy==0.18.1
