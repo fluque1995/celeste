@@ -4,28 +4,57 @@ import plotly.graph_objs as go
 
 class Displayer:
 
+    def compare_eccentric_anomalies(self, planet, time):
+        print("Anomalía excéntrica de {} el día {},"
+              .format(planet.name, time) +
+              "calculada usando funciones de Bessel: {}"
+              .format(planet.eccentric_annomaly_bessel(time, 20)))
+
+        print("Anomalía excéntrica de {} el día {},"
+              .format(planet.name, time) +
+              "calculada por el método de Newton: {}"
+              .format(planet.eccentric_annomaly(time)))
+
+        print("Diferencia entre ambos valores: {}"
+              .format(abs(planet.eccentric_annomaly_bessel(time, 20) -
+                          planet.eccentric_annomaly(time))))
+
     def print_information(self, planet, time):
 
         print("Posición de {} en el día {}: {}"
               .format(planet.name, time, planet.position(time)))
 
-        print("Distancia al sol de {} en el día {}: {}"
+        print("Distancia al sol de {} en el día {}: {}\n"
               .format(planet.name, time, planet.distance_to_sun(time)))
 
         print("Velocidad de {} en el día {}: {}"
               .format(planet.name, time, planet.speed(time)))
 
-        print("Módulo de la velocidad de {} en el día {}: {}"
+        print("Módulo de la velocidad de {} en el día {}: {}\n"
               .format(planet.name, time, planet.speed_module(time)))
 
         print("Anomalía real de {} en el día {}: {}"
               .format(planet.name, time, planet.real_annomaly(time)))
 
+        print("Anomalía real de {} en el día {}"
+              .format(planet.name, time) +
+              " (cálculo a partir de la anomalía excéntrica): {}\n"
+              .format(planet.real_annomaly_from_eccentric(time)))
+
         print("Energía de {} en el día {}: {}"
               .format(planet.name, time, planet.energy_from_time(time)))
 
-        print("Energía (constante) de {}: {}"
+        print("Energía (constante) de {}: {}\n"
               .format(planet.name, planet.energy()))
+
+        print("Módulo del momento angular de {} en el día {}: {}"
+              .format(planet.name, time,
+                      planet.angular_moment_from_time(time)))
+
+        print("Módulo del momento angular de {} (constante): {}\n"
+              .format(planet.name, planet.c))
+
+        self.compare_eccentric_anomalies(planet, time)
 
     def display_orbit(self, planet, time):
 
@@ -75,6 +104,3 @@ class Displayer:
         fig = go.Figure(data=data, layout=layout)
         py.iplot(fig)
 
-    def display_information_and_orbit(self, planet, time):
-        self.print_information(planet, time)
-        self.display_orbit(planet, time)

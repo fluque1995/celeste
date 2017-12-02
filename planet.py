@@ -1,6 +1,6 @@
 import numpy as np
 import utils
-
+import scipy.special as sp
 
 class Planet:
     def __init__(self, name, epsilon, a, period):
@@ -16,7 +16,12 @@ class Planet:
     def __str__(self):
         return self.name
 
+    def get_time_in_period(self, time):
+        return time % self.period
+
     def position(self, time):
+
+        time = self.get_time_in_period(time)
         eccentric_annomaly = utils.eccentric_annomaly(
             self.period,
             self.epsilon,
@@ -34,20 +39,20 @@ class Planet:
         return np.linalg.norm(self.position(time))
 
     def speed(self, time):
+
+        time = self.get_time_in_period(time)
         eccentric_annomaly = utils.eccentric_annomaly(
             self.period,
             self.epsilon,
             time
         )
 
-        denom = self.a**2
-        denom *= np.sqrt(1 - self.epsilon**2)
-        denom *= 1 - self.epsilon*np.cos(eccentric_annomaly)
-        quotient = self.c/denom
+        denom = self.period*(1-self.epsilon*np.cos(eccentric_annomaly))
+        quotient = 2*np.pi*self.a/denom
 
         speed = [
-            (-self.a*quotient*np.sin(eccentric_annomaly))[0],
-            (self.a*quotient *
+            (-quotient*np.sin(eccentric_annomaly))[0],
+            (quotient *
              np.sqrt(1 - self.epsilon**2)*np.cos(eccentric_annomaly))[0]
         ]
 
@@ -62,6 +67,7 @@ class Planet:
         return num/denom
 
     def real_annomaly(self, time):
+        time = self.get_time_in_period(time)
         return utils.runge_kutta(self.real_annomaly_deriv, 0, 0, time, 5000)
 
     def energy(self):
@@ -72,9 +78,19 @@ class Planet:
                 self.mu/self.distance_to_sun(time))
 
     def angular_moment_from_time(self, time):
+        time = self.get_time_in_period(time)
         real_annomaly = self.real_annomaly(time)
         return (self.distance_to_sun(time)**2 *
                 self.real_annomaly_deriv(time, real_annomaly))
+
+    def real_annomaly_from_eccentric(self, time):
+        ecc_an = utils.eccentric_annomaly(self.period,
+                                          self.epsilon,
+                                          time)
+        real_an = np.arccos((np.cos(ecc_an)[0] - self.epsilon) /
+                            (1 - self.epsilon*np.cos(ecc_an)[0]))
+        real_an = real_an if 2*time < self.period else 2*np.pi - real_an
+        return real_an
 
     def get_orbit(self, npoints):
         if self.orbit is None:
@@ -83,6 +99,22 @@ class Planet:
             self.orbit.append(self.orbit[0])
             self.orbit = np.asarray(self.orbit)
         return self.orbit
+
+    def eccentric_annomaly(self, time):
+        time = self.get_time_in_period(time)
+        return utils.eccentric_annomaly(self.period,
+                                        self.epsilon,
+                                        time)[0]
+        
+    def eccentric_annomaly_bessel(self, time, nfuncs):
+        time = self.get_time_in_period(time)
+        eccentric_annomaly = 2*np.pi*time/self.period
+
+        for i in range(nfuncs):
+            eccentric_annomaly += (2/(i+1)*sp.jv((i+1), (i+1)*self.epsilon) *
+                                   np.sin(2*np.pi*time/self.period))
+
+        return eccentric_annomaly
 
 
 planets_dict = {
