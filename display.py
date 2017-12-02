@@ -86,10 +86,10 @@ class Displayer:
                            ),
                            name='Sol')
 
-        rng = int(planet.a) + 1
+        rng = int(1.2*planet.a) + 1
 
         layout = go.Layout(
-            width=600, height=400,
+            width=600, height=500,
             xaxis=dict(
                 anchor='y',
                 range=[-rng, rng]
@@ -102,5 +102,4 @@ class Displayer:
         )
         data = [orbit, planet_pos, sun]
         fig = go.Figure(data=data, layout=layout)
-        py.iplot(fig)
-
+        py.iplot(fig, filename='plots/orbit_plot')
