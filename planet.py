@@ -110,13 +110,13 @@ class Planet:
     def eccentric_annomaly_bessel(self, time, nfuncs):
         time = self.get_time_in_period(time)
         ji = 2*np.pi*time/self.period
-        eccentric_annomaly = ji
+        ecc_an = ji
 
         for i in range(nfuncs):
-            eccentric_annomaly += ((2/(i+1))*sp.jv((i+1), (i+1)*self.epsilon) *
-                                   np.sin(2*np.pi*time/self.period))
+            bessel = sp.jv((i+1), (i+1)*self.epsilon)
+            ecc_an += ((2/(i+1))*bessel*np.sin(2*np.pi*time/self.period))
 
-        return eccentric_annomaly
+        return ecc_an
 
 
 planets_dict = {
