@@ -9,8 +9,30 @@
 \usepackage{amsfonts} 
 \usepackage{float}
 \usepackage{listings}
+\usepackage{xcolor}
 
-\usepackage[hidelinks]{hyperref}
+\usepackage{hyperref}
+
+\hypersetup{
+    bookmarks=true,         % show bookmarks bar?
+    unicode=false,          % non-Latin characters in Acrobat’s bookmarks
+    pdftoolbar=true,        % show Acrobat’s toolbar?
+    pdfmenubar=true,        % show Acrobat’s menu?
+    pdffitwindow=false,     % window fit to page when opened
+    pdfstartview={FitH},    % fits the width of the page to the window
+    pdftitle={Trabajo de mecánica celeste},    % title
+    pdfauthor={Francisco Luque},     % author
+    pdfsubject={Subject},   % subject of the document
+    pdfcreator={Creator},   % creator of the document
+    pdfproducer={Producer}, % producer of the document
+    pdfkeywords={keyword1, key2, key3}, % list of keywords
+    pdfnewwindow=true,      % links in new PDF window
+    colorlinks=true,        % false: boxed links; true: colored links
+    linkcolor=gray,         % color of internal links (change box color with linkbordercolor)
+    citecolor=green,        % color of links to bibliography
+    filecolor=magenta,      % color of file links
+    urlcolor=blue           % color of external links
+}
 
 \title{
   Mecánica Celeste\\
@@ -411,7 +433,7 @@ la relación anterior.
 \subsection{Anomalía excéntrica con funciones de Bessel}
 
 El último apartado de la práctica consiste en calcular el valor de la
-anomalía excéntrica utilizando para ello funciones de Bessel.  Vimos
+anomalía excéntrica utilizando para ello funciones de Bessel. Vimos
 en clase la siguiente expresión:
 
 \[
@@ -425,4 +447,78 @@ implementación en el programa, de forma que para un determinado $t$ se
 imprima el valor de la anomalía excéntrica calculado por el método
 de Newton-Raphson y a partir de las funciones de Bessel, y comprobaremos
 que llegamos a resultados similares.
+
+\section{Aspectos de implementación y ejecución de la práctica}
+
+Vamos ahora a comentar ciertos aspectos de la implementación que se ha
+realizado. Todo el código se ha implementado en Python 3. Dicho código
+se encuentra adjunto en el archivo comprimido de la práctica, y
+también
+está disponible en \url{https://github.com/pacron/celeste}.\\
+
+Para crear un entorno interactivo y sencillo de utilizar para el
+usuario se ha utilizado la herramienta Jupyter
+(\url{http://jupyter.org/}). Esta herramienta permite crear entornos
+interactivos de Python, de forma que es sencillo compartir el código
+desarrollado para que otros usuarios lo
+ejecuten, sin necesidad de que instalen Python en su ordenador.\\
+
+Además, para simplificar aún más la forma de compartir la información
+a otros usuarios y que puedan ejecutar el código desarrollado, se ha
+creado un entorno virtual para ejecutarlo, haciendo uso de la
+plataforma \textit{mybinder}.  Concretamente, copiando el enlace
+\url{https://mybinder.org/v2/gh/pacron/celeste/master?filepath=celeste.ipynb}
+en un navegador se accede al entorno interactivo. Lo único que hay que
+hacer es esperar a que el sistema cargue los archivos y se redigirá 
+a una ventana en la que se puede interactuar con el código. La ventana
+en cuestión es la siguiente:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.9\textwidth]{imgs/notebook}
+  \caption{Ventana de ejecución de Jupyter}
+\end{figure}
+
+Ahora, haciendo click en \textit{Cell $\rightarrow$ Run all} tal y como
+se muestra en la siguiente imagen, se ejecutan todas las celdas de código
+y se muestran los resultados de la práctica obtenidos:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.9\textwidth]{imgs/run_all}
+  \caption{Ejecución de todas las celdas de código}
+\end{figure}
+
+Una vez realizada la ejecución, debajo de las dos celdas de código apareceran
+dos objetos con los que se puede interactuar. Por un lado, un desplegable
+que nos permite seleccionar el planeta sobre el que queremos obtener información,
+y por otro, un cuadro de texto para seleccionar el día del periodo orbital en
+el que se quiere obtener dicha información.\\
+
+En la primera celda aparece la información sobre los parámetros calculados
+para el planeta en cuestión el día seleccionado, tal y como se muestra en 
+la figura siguiente. Para el ejemplo que se muestra se ha tomado la Tierra
+en el día 100 del periodo:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.9\textwidth]{imgs/earth_information}
+  \caption{Información calculada para la Tierra en el día 100 del periodo orbital}
+\end{figure}
+
+En la segunda celda, se muestra también para el planeta seleccionado, un
+gráfico con la órbita del mismo. Se muestran tres objetos en la gráfica.
+En el origen de coordenadas aparece el Sol, ya que es el punto que se
+toma como referencia. En azul, se muestra la órbita elíptica alrededor
+del Sol, y con un punto rojizo de mayor tamaño la posición que ocupa
+el planeta en el día especificado. De nuevo, en el ejemplo que se
+muestra a continuación aparece la Tierra en el día 100 del periodo
+orbital:
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=.9\textwidth]{imgs/earth_orbit}
+  \caption{Órbita de la Tierra alrededor del Sol (posición en el día 100)}
+\end{figure}
+
 \end{document}
