@@ -2,6 +2,7 @@ import numpy as np
 import utils
 import scipy.special as sp
 
+
 class Planet:
     def __init__(self, name, epsilon, a, period):
         self.name = name

@@ -73,6 +73,7 @@ calcular dicha posición, se ha utilizado el siguiente sistema:
       u(t) - \varepsilon \sin{u(t)} = \frac{2\pi}{p}(t - t_0)      
     \end{array}
   \right.
+  \label{eq:sist1}
 \end{equation}
 
 Lo primero que tenemos que calcular es la anomalía excéntrica. Hemos
@@ -180,6 +181,7 @@ se puede expresar también con el siguiente sistema de ecuaciones:
       \dot{\theta}(t) = \frac{|c|}{a^2(1 - \varepsilon^2)^2}(1 + \varepsilon \cos{(\theta(t) - \omega)})
     \end{array}
   \right.
+  \label{eq:sist2}
 \end{equation}
 
 La función $\theta(t)$ se conoce como la anomalía real del planeta, y
@@ -190,7 +192,7 @@ función, por lo que para resolverlo utilizaremos el método de
 Runge-Kutta-4. Este método numérico sirve para estimar valores de una
 función en un determinado punto $t$, conocida una expresión de la
 derivada de la función a estimar (en nuestro caso una expresión de
-$\dot{theta}(t)$, que tenemos escrita en el sistema anterior), y una
+$\dot{\theta}(t)$, que tenemos escrita en el sistema anterior), y una
 pareja $(t_0, \theta(t_0))$. Interpretando el significado de la
 fúnción $\theta$, y suponiendo que $\omega = 0$, que indica el giro
 del semieje mayor de la elipse respecto del eje $OX^{+}$, tenemos que
@@ -258,7 +260,7 @@ El valor del módulo de $|\dot{u}(t)|^2$ sabemos que es:
 
 \[
 |\dot{u}(t)|^2 = \frac{|c|^2}{a^4(1-\varepsilon^2)(1 - \varepsilon
-  cos(u(t)))^2}
+  \cos{u(t)})^2}
 \]
 
 Y conocemos la siguiente expresión para $\mu$:
@@ -272,8 +274,8 @@ obtiene que:
 
 \[
 E_t(t) = \frac{m|c|^2(1+\varepsilon
-  cos(u(t)))}{2a^2(1-\varepsilon^2)(1-\varepsilon cos(u(t)))} -
-\frac{m|c|^2}{a^2(1 - \varepsilon^2)(1-\varepsilon cos(u(t))}
+  \cos{u(t)}}{2a^2(1-\varepsilon^2)(1-\varepsilon \cos{u(t)})} -
+\frac{m|c|^2}{a^2(1 - \varepsilon^2)(1-\varepsilon \cos{u(t)})}
 \]
 
 Convirtiendo las dos fracciones a común denominador, llegamos a la
@@ -297,6 +299,130 @@ el valor que obtengamos por la masa del mismo.
 
 \subsection{Momento angular del planeta}
 
+De nuevo el cálculo del momento angular puede ser realizado de dos
+formas distintas. Tenemos, por un lado, una expresión dependiente del
+tiempo, y por otro, por la ley de conservación del momento sabemos que
+podemos encontrar una expresión constante para el mismo, dependiente
+de las constantes propias del planeta. Comenzamos viendo la expresión
+dependiente del tiempo. En clase calculamos una expresión del mismo,
+que es la siguiente:
+
+\[
+c(t) = r(t)^2\dot{\theta}(t)(0,0,1)
+\]
+
+Dado que estamos trabajando suponiendo que todos los planetas están en
+el plano $XY$, y el momento angular es perpendicular al plano en el
+que se mueve el planeta, las dos primeras componentes del momento
+angular son nulas. Es por esto que en lugar de trabajar con el momento
+angular como un vector, trabajaremos con el módulo del momento
+escalar, que coincide con el valor de su tercera componente. Por
+tanto, la expresión que daremos del mismo es
+
+\[
+|c(t)| = r(t)^2\dot{\theta}(t)
+\]
+
+Donde $r(t)$ es la distancia al Sol del planeta, y $\dot{\theta}(t)$
+la podemos obtener de \ref{eq:sist2}. Vamos ahora a ver la expresión
+constante del módulo del producto escalar. Teniendo en cuenta que el
+planeta se mueve en una elipse, llegamos a la relación:
+
+\[
+a = \frac{|c|^2}{\mu(1 - \varepsilon^2)} \Rightarrow |c| =
+\sqrt{a\mu(1 - \varepsilon^2)}
+\]
+
+Mostraremos ambos valores en el programa, para comprobar empíricamente
+que el módulo del momento angular calculado con la expresión
+dependiente del tiempo coincide con el valor constante,
+independientemente del momento de tiempo en el que hagamos el cálculo.
+
+\subsection{Anomalía real en función de la anomalía excéntrica}
+
+Vamos ahora a mostrar otra forma de calcular la anomalía real para un
+planeta en un instante de tiempo $t$. Ya hemos visto que podemos
+aproximar el valor de la anomalía real utilizando el método de
+Runge-Kutta, dado que tenemos una expresión de $\dot{\theta}(t)$ y
+sabemos que $\theta(0) = 0$. Otra forma que tenemos de realizar este
+cálculo es, sabiendo que tanto la anomalía excéntrica como la real son
+funciones biyectivas de $[0, p)$ en $[0, 2\pi)$, donde $p$ es el
+periodo de rotación del planeta, tratar de expresar $\theta$ en
+función de $u$. Como tenemos ambas funciones son biyectivas en los
+intervalos que hemos dicho, podemos establecer una biyección entre
+ambos valores.  Para ello, utilizaremos como paso intermedio la
+expresión de la posición de un planeta en un instante de tiempo
+$t$. Pasamos a ver dicha expresión.  Tomando la primera componente de
+la posición expresada en el sistema \ref{eq:sist2}, tenemos que:
+
+\[
+x(t) = \frac{a(1 - \varepsilon^2)\cos{\theta(t)}}{1 +
+  \varepsilon\cos{\theta(t)}} \Rightarrow \cos{\theta(t)} =
+\frac{x(t)(1 + \varepsilon\cos{\theta(t)})}{a(1 - \varepsilon^2)}
+\Rightarrow
+\]
+\[
+\Rightarrow \cos{\theta(t)} = \frac{x(t) + \varepsilon x(t)
+  \cos{\theta(t)}} {a(1 - \varepsilon^2)} \Rightarrow \cos{\theta(t)}
+- \frac{\varepsilon x(t) \cos{\theta(t)}} {a(1 - \varepsilon^2)} =
+\frac{x(t)}{a(1 - \varepsilon^2)} \Rightarrow
+\]
+\[
+\Rightarrow \cos{\theta(t)}\left(\frac{a(1 - \varepsilon^2) -
+    \varepsilon x(t)}{a(1 - \varepsilon^2)}\right) = \frac{x(t)}{a(1 -
+  \varepsilon^2)} \Rightarrow \cos{\theta(t)} = \frac{x(t)}{a(1 -
+  \varepsilon^2) - \varepsilon x(t)} \Rightarrow
+\]
+\[
+\Rightarrow \cos{\theta(t)} = \frac{\frac{x(t)}{a}}{1 - \varepsilon^2
+  - \varepsilon \frac{x(t)}{a}}
+\]
+
+Ahora, tomando la primera componente de la posición en el sistema
+\ref{eq:sist1}, tenemos que
+
+\[
+\frac{x(t)}{a} = \cos{u(t)} - \varepsilon
+\]
+
+Que sustituyendo en la igualdad anterior nos deja
+
+\[
+\cos{\theta(t)} = \frac{\cos{u(t)} - \varepsilon}{1 - \varepsilon^2 -
+  \varepsilon(\cos{u(t)} - \varepsilon)} = \frac{\cos{u(t)} -
+  \varepsilon}{1 - \varepsilon\cos{u(t)}}
+\]
+
+Finalmente, aplicando la función arco coseno, tenemos que
+
+\[
+\theta(t) = \arccos\left(\frac{\cos{u(t)} - \varepsilon}{1 -
+    \varepsilon\cos{u(t)}}\right)
+\]
+
+Por tanto, hemos conseguido expresar la anomalía real en función
+de la anomalía excéntrica, por lo que podemos calcular un valor
+en función del otro. En el programa, lo que tendremos será una
+función que nos acepte un tiempo $t$, respecto de ese tiempo se
+calcula el valor de la anomalía excéntrica, y con ese valor de
+anomalía excéntrica se calcula el valor de la anomalía real usando
+la relación anterior.
+
+\subsection{Anomalía excéntrica con funciones de Bessel}
+
+El último apartado de la práctica consiste en calcular el valor de la
+anomalía excéntrica utilizando para ello funciones de Bessel.  Vimos
+en clase la siguiente expresión:
+
+\[
+u(t) = \frac{2 \pi (t - t_0)}{p} + \sum \frac{2}{n} J_n(n\varepsilon)
+\sin{\frac{2 \pi (t - t_0)}{p}}
+\]
+
+Donde $J_n$ es la función de Bessel de orden $n$. Suponiendo como
+hemos hecho en el resto de la práctica que $t_0 = 0$, daremos esta
+implementación en el programa, de forma que para un determinado $t$ se
+imprima el valor de la anomalía excéntrica calculado por el método
+de Newton-Raphson y a partir de las funciones de Bessel, y comprobaremos
+que llegamos a resultados similares.
 \end{document}
-
-
