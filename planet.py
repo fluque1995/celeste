@@ -114,7 +114,7 @@ class Planet:
 
         for i in range(nfuncs):
             bessel = sp.jv((i+1), (i+1)*self.epsilon)
-            ecc_an += ((2/(i+1))*bessel*np.sin(2*np.pi*time/self.period))
+            ecc_an += (2/(i+1))*bessel*np.sin((i+1)*ji)
 
         return ecc_an
 
