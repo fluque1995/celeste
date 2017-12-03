@@ -17,6 +17,9 @@ class Planet:
     def __str__(self):
         return self.name
 
+    def __gt__(self, planet):
+        return self.a > planet.a
+
     def get_time_in_period(self, time):
         return time % self.period
 
